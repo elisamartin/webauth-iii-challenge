@@ -2,6 +2,7 @@ const express = require('express');
 const helmet = require('helmet');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
 const Users = require('./data/helpers/users-model');
 const protected = require('./middleware');
 
@@ -9,6 +10,7 @@ const server = express();
 
 server.use(helmet());
 server.use(express.json());
+server.use(cors());
 
 // Check server is working
 server.get('/', (req, res) => {
@@ -20,7 +22,6 @@ server.post('/api/register', (req, res) => {
 	let user = req.body;
 	const hash = bcrypt.hashSync(user.password, 10);
 	user.password = hash;
-
 	Users.add(user)
 		.then((saved) => {
 			res.status(201).json(saved);
